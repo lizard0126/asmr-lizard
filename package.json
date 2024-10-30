@@ -1,7 +1,11 @@
 {
   "name": "koishi-plugin-asmr-lizard",
-  "description": "来一段随机的助眠asmr吧~",
+  "description": "来一段随机的助眠asmr吧~还有睡前故事哦~",
   "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lizard0126/asmr-lizard.git"
+  },
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "files": [
@@ -9,14 +13,15 @@
     "dist"
   ],
   "license": "MIT",
-  "scripts": {},
   "keywords": [
     "chatbot",
     "koishi",
-    "plugin"
+    "plugin",
+    "asmr"
   ],
-  "devDependencies": {},
   "peerDependencies": {
+    "ffmpeg": "1.1.0",
+    "silk": "1.5.2",
     "koishi": "4.18.0"
   }
 }
