@@ -1,9 +1,14 @@
-import { Context, h } from 'koishi';
+import { Context, Schema, h } from 'koishi';
+// npm publish --workspace koishi-plugin-asmr-lizard --access public --registry https://registry.npmjs.org
 import {  } from 'koishi-plugin-ffmpeg';
 import {  } from 'koishi-plugin-silk';
 
 export const name = 'asmr-lizard';
 export const inject = ['ffmpeg', 'silk'];
+
+export interface Config {}
+
+export const Config = Schema.object({});
 
 export const usage = `
 - 获取以下类型的助眠音频：钢琴、雨声、脑波、自然
