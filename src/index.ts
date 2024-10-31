@@ -1,12 +1,12 @@
 import { Context, Schema, h } from 'koishi';
 // npm publish --workspace koishi-plugin-asmr-lizard --access public --registry https://registry.npmjs.org
-import {  } from 'koishi-plugin-ffmpeg';
-import {  } from 'koishi-plugin-silk';
+import { } from 'koishi-plugin-ffmpeg';
+import { } from 'koishi-plugin-silk';
 
 export const name = 'asmr-lizard';
 export const inject = ['ffmpeg', 'silk'];
 
-export interface Config {}
+export interface Config { }
 
 export const Config = Schema.object({});
 
@@ -46,40 +46,47 @@ export function apply(ctx: Context) {
       try {
         const response = await ctx.http.get(apiUrl);
         const { title, cover, url } = response;
-        
+
         const audioData = await ctx.http.get<ArrayBuffer>(url, { responseType: 'arraybuffer' });
         const buffer = Buffer.from(audioData);
 
-        // 使用 FFmpeg 获取音频时长
         const durationBuffer = await ctx.ffmpeg.builder()
           .input(buffer)
           .outputOption('-f', 'null')
           .run('info');
-        
+
         const durationOutput = durationBuffer.toString();
         const match = /Duration: (\d+):(\d+):(\d+\.\d+)/.exec(durationOutput);
         const duration = match ? (parseInt(match[1]) * 3600 + parseInt(match[2]) * 60 + parseFloat(match[3])) : 0;
 
-        await session.send(`${title}\n${h.image(cover)}`);
+        const coverResponse = await ctx.http.get(cover);
+        await session.send(`${title}\n${h.image(coverResponse)}`);
 
         const maxSegmentDuration = 5 * 60;
         if (duration <= maxSegmentDuration) {
-          await session.send(h.audio(url));
+          const silkBuffer = await ctx.ffmpeg.builder()
+            .input(buffer)
+            .outputOption('-f', 'silk')
+            .run('buffer');
+
+          await session.send(h.audio(silkBuffer, 'audio/silk'));
         } else {
           await session.send('音频时长大于5分钟，将分段发送');
           const segmentCount = Math.ceil(duration / maxSegmentDuration);
 
           for (let i = 0; i < segmentCount; i++) {
             const startTime = i * maxSegmentDuration;
+
             const segmentBuffer = await ctx.ffmpeg.builder()
               .input(buffer)
               .inputOption('-ss', startTime.toString())
-              .outputOption('-t', maxSegmentDuration.toString(), '-f', 'wav')
+              .outputOption('-t', maxSegmentDuration.toString(), '-f', 'silk')
               .run('buffer');
 
-            await session.send(h.audio(segmentBuffer, 'audio/vnd.wave'));
+            await session.send(h.audio(segmentBuffer, 'audio/silk'));
           }
         }
+
       } catch (error) {
         ctx.logger.error('请求失败', error.message);
         return '请求过程中出现错误，请稍后重试。';
