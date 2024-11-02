@@ -1,7 +1,7 @@
 {
   "name": "koishi-plugin-asmr-lizard",
-  "description": "来一段随机的助眠asmr吧~还有睡前故事哦~",
-  "version": "0.0.4",
+  "description": "来一段随机的助眠asmr吧,还有睡前故事哦!",
+  "version": "1.0.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/lizard0126/asmr-lizard.git"

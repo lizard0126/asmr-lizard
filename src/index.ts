@@ -15,6 +15,8 @@ export const usage = `
 - 还有睡前故事哦~
 
 - 如果是比较长的音频会分段发送~
+---
+#### 喜欢我的插件可以[请我喝可乐](https://ifdian.net/a/lizard0126)，没准就有动力更新新功能了
 `;
 
 const apis = {
@@ -38,6 +40,7 @@ export function apply(ctx: Context) {
       }
 
       const apiUrl = apis[type];
+      // 检查 apiUrl 是否存在
       if (!apiUrl) {
         return '提供以下类型：钢琴、雨声、脑波、自然、故事，或输入随机。';
       }
@@ -82,8 +85,24 @@ export function apply(ctx: Context) {
               .outputOption('-t', maxSegmentDuration.toString(), '-f', 'mp3')
               .run('buffer');
 
-            // 发送每段音频
-            await session.send(h.audio(segmentBuffer, 'audio/mp3'));
+            // 添加重试机制
+            const maxRetries = 3; // 最大重试次数
+            let attempts = 0;
+            let sent = false;
+
+            while (attempts < maxRetries && !sent) {
+              try {
+                // 发送每段音频
+                await session.send(h.audio(segmentBuffer, 'audio/mp3'));
+                sent = true; // 成功发送，退出循环
+              } catch (error) {
+                attempts++;
+                ctx.logger.warn(`发送第 ${i + 1} 段音频失败，正在重试...（尝试次数: ${attempts}）`);
+                if (attempts === maxRetries) {
+                  await session.send(`第 ${i + 1} 段音频发送失败。`);
+                }
+              }
+            }
           }
         }
       } catch (error) {
