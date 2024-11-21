@@ -16,7 +16,12 @@ export const usage = `
 
 - 如果是比较长的音频会分段发送~
 ---
-#### 喜欢我的插件可以[请我喝可乐](https://ifdian.net/a/lizard0126)，没准就有动力更新新功能了
+## 如果喜欢我的插件
+<details>
+
+可以[请我喝可乐](https://ifdian.net/a/lizard0126)，没准就有动力更新新功能了
+
+</details>
 `;
 
 const apis = {
@@ -73,7 +78,7 @@ export function apply(ctx: Context) {
           await session.send(h.audio(buffer, 'audio/mp3'));
         } else {
           const segmentCount = Math.ceil(duration / maxSegmentDuration);
-          await session.send(`音频时长大于5分钟，将分段发送，共 ${segmentCount} 段。`);
+          await session.send(`音频时长大于5分钟，将分${segmentCount}段发送。`);
 
           for (let i = 0; i < segmentCount; i++) {
             const startTime = i * maxSegmentDuration;
@@ -97,7 +102,7 @@ export function apply(ctx: Context) {
                 sent = true; // 成功发送，退出循环
               } catch (error) {
                 attempts++;
-                ctx.logger.warn(`发送第 ${i + 1} 段音频失败，正在重试...（尝试次数: ${attempts}）`);
+                await session.send(`发送第 ${i + 1} 段音频失败，正在重试...（尝试次数: ${attempts}）`);
                 if (attempts === maxRetries) {
                   await session.send(`第 ${i + 1} 段音频发送失败。`);
                 }
