@@ -1,9 +1,12 @@
 import { Context, Schema } from 'koishi';
 export declare const name = "asmr-lizard";
 export declare const inject: string[];
-export interface Config {
-    sendMode: 'voice' | 'file';
-}
-export declare const Config: Schema<Config>;
 export declare const usage = "\n# \uD83C\uDF19 \u52A9\u7720\u97F3\u9891\u63D2\u4EF6\u4F7F\u7528\u6307\u5357\n## \u63D0\u4F9B\u591A\u79CD\u7C7B\u578B\u7684\u52A9\u7720\u97F3\u9891\uFF0C\u5305\u62EC\u94A2\u7434\u3001\u96E8\u58F0\u3001\u8111\u6CE2\u3001\u81EA\u7136\u7B49\uFF0C\u8BA9\u60A8\u4EAB\u53D7\u6DF1\u5EA6\u653E\u677E\u4E0E\u5B89\u7720\u3002\n\n---\n\n<details>\n<summary><strong><span style=\"font-size: 1.3em; color: #2a2a2a;\">\u4F7F\u7528\u65B9\u6CD5</span></strong></summary>\n\n### \u901A\u8FC7\u7C7B\u578B\u83B7\u53D6\u52A9\u7720\u97F3\u9891\n#### \u793A\u4F8B\uFF1A\n<pre style=\"background-color: #f4f4f4; padding: 10px; border-radius: 4px; border: 1px solid #ddd;\">\u52A9\u7720 \u94A2\u7434 // \u83B7\u53D6\u94A2\u7434\u97F3\u4E50</pre>\n<pre style=\"background-color: #f4f4f4; padding: 10px; border-radius: 4px; border: 1px solid #ddd;\">\u52A9\u7720 \u96E8\u58F0 // \u83B7\u53D6\u96E8\u58F0\u97F3\u9891</pre>\n<pre style=\"background-color: #f4f4f4; padding: 10px; border-radius: 4px; border: 1px solid #ddd;\">\u52A9\u7720 \u968F\u673A // \u968F\u673A\u83B7\u53D6\u4E00\u79CD\u7C7B\u578B\u7684\u97F3\u9891</pre>\n\n### \u6CE8\u610F\u4E8B\u9879\uFF1A\n- \u5F53\u97F3\u9891\u957F\u5EA6\u8D85\u8FC7 5 \u5206\u949F\u65F6\uFF0C\u4F1A\u5206\u6BB5\u53D1\u9001\u3002\n- \u652F\u6301\u8BED\u97F3\u548C\u6587\u4EF6\u4E24\u79CD\u53D1\u9001\u65B9\u5F0F\uFF0C\u4F7F\u7528\u914D\u7F6E\u9879\u9009\u62E9\u3002\n</details>\n\n<details>\n<summary><strong><span style=\"font-size: 1.3em; color: #2a2a2a;\">\u5982\u679C\u8981\u53CD\u9988\u5EFA\u8BAE\u6216\u62A5\u544A\u95EE\u9898</span></strong></summary>\n\n<strong>\u53EF\u4EE5[\u70B9\u8FD9\u91CC](https://github.com/lizard0126/asmr-lizard/issues)\u521B\u5EFA\u8BAE\u9898~</strong>\n</details>\n\n<details>\n<summary><strong><span style=\"font-size: 1.3em; color: #2a2a2a;\">\u5982\u679C\u559C\u6B22\u6211\u7684\u63D2\u4EF6</span></strong></summary>\n\n<strong>\u53EF\u4EE5[\u8BF7\u6211\u559D\u53EF\u4E50](https://ifdian.net/a/lizard0126)\uFF0C\u6CA1\u51C6\u5C31\u6709\u52A8\u529B\u66F4\u65B0\u65B0\u529F\u80FD\u4E86~</strong>\n</details>\n";
-export declare function apply(ctx: Context): void;
+export declare const Config: Schema<Schemastery.ObjectS<{
+    sendMode: Schema<"voice" | "file", "voice" | "file">;
+    apiHead: Schema<string, string>;
+}>, Schemastery.ObjectT<{
+    sendMode: Schema<"voice" | "file", "voice" | "file">;
+    apiHead: Schema<string, string>;
+}>>;
+export declare function apply(ctx: Context, config: any): void;

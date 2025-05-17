@@ -5,14 +5,6 @@ import { } from 'koishi-plugin-ffmpeg';
 export const name = 'asmr-lizard';
 export const inject = ['ffmpeg'];
 
-export interface Config {
-  sendMode: 'voice' | 'file';
-}
-
-export const Config: Schema<Config> = Schema.object({
-  sendMode: Schema.union(['voice', 'file']).default('file').description('音频发送方式，voice为语音消息，file为文件。')
-});
-
 export const usage = `
 # 🌙 助眠音频插件使用指南
 ## 提供多种类型的助眠音频，包括钢琴、雨声、脑波、自然等，让您享受深度放松与安眠。
@@ -46,13 +38,10 @@ export const usage = `
 </details>
 `;
 
-const apis = {
-  '钢琴': 'https://www.hhlqilongzhu.cn/api/ximalaya/ximalaya_gangqin.php',
-  '雨声': 'https://www.hhlqilongzhu.cn/api/ximalaya/ximalaya_rain.php',
-  '脑波': 'https://www.hhlqilongzhu.cn/api/ximalaya/ximalaya_naobo.php',
-  '自然': 'https://www.hhlqilongzhu.cn/api/ximalaya/ximalaya_daziran.php',
-  '故事': 'https://www.hhlqilongzhu.cn/api/ximalaya/ximalaya_gushi.php',
-};
+export const Config = Schema.object({
+  sendMode: Schema.union(['voice', 'file']).default('file').description('音频发送方式，voice为语音消息，file为文件。'),
+  apiHead: Schema.string().default('https://www.hhlqilongzhu.cn/').description('默认API请勿更改'),
+});
 
 async function fetchImage(ctx: Context, url: string, referer: string): Promise<string> {
   const imageBuffer = await ctx.http.get(url, {
@@ -63,10 +52,16 @@ async function fetchImage(ctx: Context, url: string, referer: string): Promise<s
   return `data:image/jpeg;base64,${Buffer.from(imageBuffer).toString('base64')}`;
 }
 
-export function apply(ctx: Context) {
+export function apply(ctx: Context, config) {
   ctx.command('助眠 [type]', '获取助眠音频，包括小故事')
     .action(async ({ session }, type) => {
-      const config = ctx.config as Config;
+      const apis = {
+        '钢琴': config.apiHead + 'api/ximalaya/ximalaya_gangqin.php',
+        '雨声': config.apiHead + 'api/ximalaya/ximalaya_rain.php',
+        '脑波': config.apiHead + 'api/ximalaya/ximalaya_naobo.php',
+        '自然': config.apiHead + 'api/ximalaya/ximalaya_daziran.php',
+        '故事': config.apiHead + 'api/ximalaya/ximalaya_gushi.php',
+      };
       const sendAsVoice = config.sendMode === 'voice';
 
       if (!type) return '提供以下类型：钢琴、雨声、脑波、自然、故事，输入随机则随机获取。';
