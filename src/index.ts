@@ -1,5 +1,4 @@
 import { Context, Schema, h } from 'koishi';
-// npm publish --workspace koishi-plugin-asmr-lizard --access public --registry https://registry.npmjs.org
 import { } from 'koishi-plugin-ffmpeg';
 
 export const name = 'asmr-lizard';
